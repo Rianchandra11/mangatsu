@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_manga/listKomik.dart';
 import 'package:project_manga/profil.dart';
 import 'package:project_manga/bytitle.dart';
+import 'package:project_manga/bygenre.dart';
 
 class Beranda extends StatefulWidget {
   const Beranda({super.key});
@@ -12,6 +13,11 @@ class Beranda extends StatefulWidget {
 
 class _BerandaState extends State<Beranda> {
   List<Manga> komik = allKomik;
+  List<String> genre = allGenre;
+  Icon drop = Icon(Icons.keyboard_arrow_down_sharp);
+  bool ischeck = false;
+  final Set<String> genreFilters = {};
+  bool down = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearchActive = false;
 
@@ -40,8 +46,21 @@ class _BerandaState extends State<Beranda> {
     );
   }
 
+  void cariGenre(Set genre) {
+    final hasil =
+        komik.where((manga) {
+          return genre.every((gen) => manga.genre.contains(gen));
+        }).toList();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Bygenre(manga: hasil,genre: genre,)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(genre);
+    print(genreFilters);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -136,6 +155,111 @@ class _BerandaState extends State<Beranda> {
                 iconSize: 50,
               ),
             ],
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset('assets/icons/puzzleicon.png', width: 30),
+                        SizedBox(width: 10),
+                        Text(
+                          'FILTER GENRE',
+                          style: TextStyle(fontFamily: 'Tilt', fontSize: 23),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (down) {
+                                drop = Icon(Icons.keyboard_arrow_down_sharp);
+                                down = false;
+                              } else {
+                                drop = Icon(Icons.keyboard_arrow_up_sharp);
+                                down = true;
+                              }
+                            });
+                          },
+                          icon: drop,
+                        ),
+                      ],
+                    ),
+
+                    if (down)
+                      Container(
+                        width: 350,
+                        height: 400,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black, blurRadius: 1),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: GridView.count(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 6,
+                                  physics: BouncingScrollPhysics(),
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
+                                  children:
+                                      genre.map((g) {
+                                        return Row(
+                                          children: [
+                                            Checkbox(
+                                              value: genreFilters.contains(g),
+                                              onChanged: (bool? value) {
+                                                setState(() {
+                                                  if (value == true) {
+                                                    genreFilters.add(g);
+                                                  } else {
+                                                    genreFilters.remove(g);
+                                                  }
+                                                });
+                                              },
+                                            ),
+                                            Text(g),
+                                          ],
+                                        );
+                                      }).toList(),
+                                ),
+                              ),
+                              Container(
+                                width: 70,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: Colors.purple,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    cariGenre(genreFilters);
+                                  },
+                                  child: Text(
+                                    "Cari",
+                                    style: TextStyle(
+                                      fontFamily: 'Tilt',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
           ),
           SliverPadding(
             padding: EdgeInsets.all(8.0),
