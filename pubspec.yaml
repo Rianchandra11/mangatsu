@@ -59,6 +59,7 @@ flutter:
   assets:
     - assets/logo/logoM.png
     - assets/logo/LogoM1.png
+    - assets/icons/puzzleicon.png
   fonts:
     - family: Tilt
       fonts:

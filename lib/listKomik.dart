@@ -23,6 +23,11 @@ class Manga {
   });
 }
 
+final allGenre = allKomik
+    .expand((m) => m.genre)
+    .toSet()
+    .toList()..sort();
+
 const allKomik = [
   Manga(
     title: "Kimetsu No Yaiba",
@@ -66,7 +71,7 @@ const allKomik = [
     sinopsis:
         "Pembunuh bayaran Juzo Ogami dikenal sebagai legenda di dunia hitam yang sangat terampil. Namun dirinya memiliki masalah jati diri yang membuatnya ditinggal oleh putri dan istrinya. Pada sebuah misi yang dia lakoni, terdapat kejadian tidak terduga yang membuat dirinya kembali menjadi anak-anak karena sebuah sengatan lebah laboratorium. Setelah dia kebingungan menafkahi putri dan mantan istrinya, dia ditawari pekerjaan untuk mencoba bersekolah di SMP Swasta yang akan dimasuki oleh putri bosnya. Dirinya yang bahkan dulu tidak lulus SD, kini mendapat kesempatan kembali untuk bersekolah. Dapatkah dia mendapatkan jati diri dan membuat hidupnya lebih berwarna?",
     release: "2022",
-    genre: ["Action", "Comedy", "School Life", "Shounen", "Supernatura"],
+    genre: ["Action", "Comedy", "School Life", "Shounen", "Supernatural"],
     author: "FUJIMAKI Tadatoshi",
   ),
   Manga(
@@ -78,7 +83,7 @@ const allKomik = [
     sinopsis:
         "Pembunuh bayaran Juzo Ogami dikenal sebagai legenda di dunia hitam yang sangat terampil. Namun dirinya memiliki masalah jati diri yang membuatnya ditinggal oleh putri dan istrinya. Pada sebuah misi yang dia lakoni, terdapat kejadian tidak terduga yang membuat dirinya kembali menjadi anak-anak karena sebuah sengatan lebah laboratorium. Setelah dia kebingungan menafkahi putri dan mantan istrinya, dia ditawari pekerjaan untuk mencoba bersekolah di SMP Swasta yang akan dimasuki oleh putri bosnya. Dirinya yang bahkan dulu tidak lulus SD, kini mendapat kesempatan kembali untuk bersekolah. Dapatkah dia mendapatkan jati diri dan membuat hidupnya lebih berwarna?",
     release: "2023",
-    genre: ["Action", "Comedy", "School Life", "Shounen", "Supernatura"],
+    genre: ["Action", "Comedy", "School Life", "Shounen", "Supernatural"],
     author: "FUJIMAKI Tadatoshi",
   ),
   Manga(
@@ -104,9 +109,9 @@ const allKomik = [
     release: "2023",
     genre: [
       "Comedy",
-      "Fantasy,"
-          "Romance,"
-          "Seinen",
+      "Fantasy",
+      "Romance",
+      "Seinen",
     ],
     author: "Moriya Haru",
   ),
@@ -228,8 +233,8 @@ const allKomik = [
       "Fantasy",
       "Harem",
       "Isekai",
-      "Romance"
-          "Shounen",
+      "Romance",
+      "Shounen",
     ],
     author: "Main",
   ),
@@ -289,7 +294,7 @@ const allKomik = [
       "Action",
       "Adventure",
       "Horror",
-      "pyschological",
+      "Pyschological",
       "Shounen",
       "Supernatural",
       "Tragedy",
@@ -305,7 +310,7 @@ const allKomik = [
     sinopsis:
         "Dengan kehendak sang dewi, Itsuki shinomiya diberi hak istimewa unutuk memilih berbagai kemampuan dan dilahirkan kembali di dunia lain. Namun, sebelum pergi ke dunia lain, dia tidak ingin melibatkan diri dalam hal-hal menakutkan, kotor dan kotor seperti pertempuran.Dengan tekad kuat uuntuk menjalani kehidupan yang lambat, ia memilih keterampilan unik, memberinya sejumlah uang sekali sehari. Dengan ini aku bisa bergaul dengan gadis gadis lain tanpa harus bekerja!. Bermimpi menghindari pertempuran dan hidup dengan gadis gadis manis, Itsuki melangkah ke dunia lain. Tetapi kenyataan nya tidak semudah itu. Di serang oleh serangga raksasa, terjebak dalam pertengkaran guild, dan terjebak dengan budak ?!. Pada akhirnya, akankah itsuki dapat menjalani kehidupan yang ideal lambat?. Menggunakan keterampilan unik dan keterampilan manufaktur, kehidupan lambat dunia lain yang menarik dengan gadis gadis cantik dimulai sekarang.  ",
     release: "2019",
-    genre: ["Action", "Adventure", "Ecci", "Harem", "Isekai", "Shounen"],
+    genre: ["Action", "Adventure", "Ecchi", "Harem", "Isekai", "Shounen"],
     author: "Shige",
   ),
   Manga(
