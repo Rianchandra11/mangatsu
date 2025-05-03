@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_manga/listKomik.dart';
+import 'package:project_manga/anime_grid.dart';
+import 'package:project_manga/models/listKomik.dart';
+
 class MangaByTitle extends StatefulWidget {
   final String title;
-  final List komikS;
+  final List<Manga> komikS;
   const MangaByTitle({super.key, required this.title, required this.komikS});
 
   @override
@@ -22,27 +24,26 @@ class _MangaByTitleState extends State<MangaByTitle> {
       }
     });
   }
- 
+
   void cariKomik(String titlek) {
     final cari =
-      komik.where((manga) {
-        final komiktitle = manga.title.toLowerCase();
-        final input_title = titlek.toLowerCase();
+        komik.where((manga) {
+          final komiktitle = manga.title.toLowerCase();
+          final input_title = titlek.toLowerCase();
+          return komiktitle.contains(input_title);
+        }).toList();
 
-            return komiktitle.contains(input_title);
-      }).toList();
-      setState(() {
-        Navigator.push(
+    setState(() {
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => MangaByTitle(title: titlek, komikS: cari),
-        ));
-      });
-      
-     
-    }
-  
-    @override
+        ),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,10 +51,10 @@ class _MangaByTitleState extends State<MangaByTitle> {
         slivers: [
           SliverAppBar(
             bottom: PreferredSize(
-              preferredSize: Size(30.0, 55.0),
+              preferredSize: const Size(30.0, 55.0),
               child: Row(
                 children: [
-                  Expanded(child: Text("")),
+                  const Expanded(child: Text("")),
                   SizedBox(
                     width: 250,
                     child:
@@ -61,7 +62,11 @@ class _MangaByTitleState extends State<MangaByTitle> {
                             ? SizedBox(
                               width: 50,
                               height: 50,
-                              child: Padding(padding: EdgeInsets.only(bottom: 10,left: 10),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 10,
+                                  left: 10,
+                                ),
                                 child: TextField(
                                   controller: _searchController,
                                   onSubmitted: (title) => cariKomik(title),
@@ -71,8 +76,10 @@ class _MangaByTitleState extends State<MangaByTitle> {
                                       color: Colors.white,
                                       fontSize: 15,
                                     ),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black),
+                                    border: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
+                                      ),
                                     ),
                                     suffixIcon: IconButton(
                                       icon: const Icon(
@@ -84,12 +91,12 @@ class _MangaByTitleState extends State<MangaByTitle> {
                                   ),
                                   style: const TextStyle(color: Colors.white),
                                 ),
-                              )
+                              ),
                             )
                             : Align(
                               alignment: Alignment.topRight,
                               child: IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.search,
                                   color: Colors.white,
                                   size: 35,
@@ -101,11 +108,11 @@ class _MangaByTitleState extends State<MangaByTitle> {
                 ],
               ),
             ),
-            title: Padding(
+            title: const Padding(
               padding: EdgeInsets.only(top: 10),
               child: Row(
                 children: [
-                  Image.asset('assets/logo/LogoM1.png', width: 40),
+                  Image(image: AssetImage('assets/logo/LogoM1.png'), width: 40),
                   Text(
                     "angaTsu",
                     style: TextStyle(
@@ -120,59 +127,45 @@ class _MangaByTitleState extends State<MangaByTitle> {
             backgroundColor: Colors.black,
             leading: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.menu, color: Colors.white, size: 50),
+              icon: const Icon(Icons.menu, color: Colors.white, size: 50),
             ),
             actions: [
               IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.person),
+                icon: const Icon(Icons.person),
                 color: Colors.white,
                 iconSize: 50,
               ),
             ],
           ),
           widget.komikS.isEmpty
-              ? SliverToBoxAdapter(child: Center(child: Column(children: [
-                Text("Tidak ditemukan manga berjudul ${widget.title}",
-                style: TextStyle(fontFamily: 'Inter',fontSize: 16),),
-                Icon(Icons.search_off)
-              ],)))
-              : SliverToBoxAdapter(child: Center(child: Text("Ditemukan Manga Berjudul : ${widget.title}\nSebanyak : ${widget.komikS.length}",style: TextStyle(fontFamily: 'Inter',fontSize: 15),)),),SliverPadding(
-                padding: EdgeInsets.all(8.0),
-                sliver: 
-                    SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 5.0,
-                          crossAxisSpacing: 5.0,
-                          mainAxisExtent: 250
+              ? SliverToBoxAdapter(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Tidak ditemukan manga berjudul ${widget.title}",
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
                         ),
-
-                        itemCount: widget.komikS.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(100, 40, 46, 51),
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(padding: EdgeInsets.only(top: 10)),
-                                Image.network(widget.komikS[index].linkGambar,width: 160,height: 150,),
-                                Text(
-                                  widget.komikS[index].title.length > 15 ? '${widget.komikS[index].title.substring(0,15)}...' 
-                                  : 
-                                  widget.komikS[index].title,style: TextStyle(fontFamily: 'Tiro',fontSize: 15),),
-                                Text("Chapter " + widget.komikS[index].chapter,style: TextStyle(fontFamily: 'Tiro',fontSize: 14),),
-                                Text("Status: " + widget.komikS[index].status,style: TextStyle(fontFamily: 'Tiro',fontSize: 14),)
-                              ],
-                            ),
-                          );
-                        },
-                   
-                    
+                      ),
+                      const Icon(Icons.search_off),
+                    ],
+                  ),
                 ),
               )
+              : SliverToBoxAdapter(
+                child: Center(
+                  child: Text(
+                    "Ditemukan Manga Berjudul : ${widget.title}\nSebanyak : ${widget.komikS.length}",
+                    style: const TextStyle(fontFamily: 'Inter', fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          // Menggunakan AnimeGrid di sini
+          AnimeGrid(komik: widget.komikS),
         ],
       ),
     );

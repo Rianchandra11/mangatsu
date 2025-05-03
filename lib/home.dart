@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_manga/listKomik.dart';
+import 'package:project_manga/anime_grid.dart';
+import 'package:project_manga/models/listKomik.dart';
 import 'package:project_manga/profil.dart';
 import 'package:project_manga/bytitle.dart';
 import 'package:project_manga/bygenre.dart';
@@ -20,6 +21,7 @@ class _BerandaState extends State<Beranda> {
   bool down = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearchActive = false;
+  String? _selectedSortOption;
 
   void _toggleSearch() {
     setState(() {
@@ -53,8 +55,40 @@ class _BerandaState extends State<Beranda> {
         }).toList();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Bygenre(manga: hasil,genre: genre,)),
+      MaterialPageRoute(
+        builder: (context) => Bygenre(manga: hasil, genre: genre),
+      ),
     );
+  }
+
+  void _sortManga(String? value) {
+    if (value == null) return;
+
+    setState(() {
+      _selectedSortOption = value;
+      switch (value) {
+        case 'a-z':
+          komik.sort((a, b) => a.title.compareTo(b.title));
+          break;
+        case 'z-a':
+          komik.sort((a, b) => b.title.compareTo(a.title));
+          break;
+        case 'ongoing':
+          komik.sort((a, b) {
+            if (a.status == 'Ongoing' && b.status != 'Ongoing') return -1;
+            if (a.status != 'Ongoing' && b.status == 'Ongoing') return 1;
+            return 0;
+          });
+          break;
+        case 'completed':
+          komik.sort((a, b) {
+            if (a.status == 'Completed' && b.status != 'Completed') return -1;
+            if (a.status != 'Completed' && b.status == 'Completed') return 1;
+            return 0;
+          });
+          break;
+      }
+    });
   }
 
   @override
@@ -164,30 +198,59 @@ class _BerandaState extends State<Beranda> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset('assets/icons/puzzleicon.png', width: 30),
-                        SizedBox(width: 10),
-                        Text(
-                          'FILTER GENRE',
-                          style: TextStyle(fontFamily: 'Tilt', fontSize: 23),
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/icons/puzzleicon.png',
+                              width: 30,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'FILTER GENRE',
+                              style: TextStyle(
+                                fontFamily: 'Tilt',
+                                fontSize: 23,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (down) {
+                                    drop = Icon(
+                                      Icons.keyboard_arrow_down_sharp,
+                                    );
+                                    down = false;
+                                  } else {
+                                    drop = Icon(Icons.keyboard_arrow_up_sharp);
+                                    down = true;
+                                  }
+                                });
+                              },
+                              icon: drop,
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (down) {
-                                drop = Icon(Icons.keyboard_arrow_down_sharp);
-                                down = false;
-                              } else {
-                                drop = Icon(Icons.keyboard_arrow_up_sharp);
-                                down = true;
-                              }
-                            });
-                          },
-                          icon: drop,
+                        DropdownButton<String>(
+                          hint: Text('Sort by'),
+                          value: _selectedSortOption,
+                          items: [
+                            DropdownMenuItem(value: 'a-z', child: Text('A-Z')),
+                            DropdownMenuItem(value: 'z-a', child: Text('Z-A')),
+                            DropdownMenuItem(
+                              value: 'ongoing',
+                              child: Text('Ongoing'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'completed',
+                              child: Text('Completed'),
+                            ),
+                          ],
+                          onChanged: _sortManga,
                         ),
                       ],
                     ),
-
                     if (down)
                       Container(
                         width: 350,
@@ -261,54 +324,7 @@ class _BerandaState extends State<Beranda> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: EdgeInsets.all(8.0),
-            sliver: SliverGrid.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 5.0,
-                crossAxisSpacing: 5.0,
-                mainAxisExtent: 250,
-              ),
-              itemCount: komik.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(100, 40, 46, 51),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Image.network(
-                        komik[index].linkGambar,
-                        width: 160,
-                        height: 150,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text(
-                          komik[index].title.length > 15
-                              ? '${komik[index].title.substring(0, 15)}...'
-                              : komik[index].title,
-
-                          style: TextStyle(fontFamily: 'Tiro', fontSize: 15),
-                        ),
-                      ),
-                      Text(
-                        "Chapter " + komik[index].chapter,
-                        style: TextStyle(fontFamily: 'Tiro', fontSize: 14),
-                      ),
-                      Text(
-                        "Status: " + komik[index].status,
-                        style: TextStyle(fontFamily: 'Tiro', fontSize: 14),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+          AnimeGrid(komik: komik),
         ],
       ),
     );
