@@ -13,7 +13,8 @@ class Beranda extends StatefulWidget {
 }
 
 class _BerandaState extends State<Beranda> {
-  List<Manga> komik = allKomik;
+  List<Manga> allManga = allKomik; // Simpan semua data asli
+  List<Manga> displayedManga = allKomik; // Data yang ditampilkan
   List<String> genre = allGenre;
   Icon drop = Icon(Icons.keyboard_arrow_down_sharp);
   bool ischeck = false;
@@ -34,7 +35,7 @@ class _BerandaState extends State<Beranda> {
 
   void cariKomik(String title) {
     final cari =
-        komik.where((manga) {
+        allManga.where((manga) {
           final komiktitle = manga.title.toLowerCase();
           final input_title = title.toLowerCase();
 
@@ -50,7 +51,7 @@ class _BerandaState extends State<Beranda> {
 
   void cariGenre(Set genre) {
     final hasil =
-        komik.where((manga) {
+        allManga.where((manga) {
           return genre.every((gen) => manga.genre.contains(gen));
         }).toList();
     Navigator.push(
@@ -61,40 +62,39 @@ class _BerandaState extends State<Beranda> {
     );
   }
 
-  void _sortManga(String? value) {
+  void _filterAndSortManga(String? value) {
     if (value == null) return;
 
     setState(() {
       _selectedSortOption = value;
+
+      // Reset to all manga first
+      displayedManga = List.from(allManga);
+
       switch (value) {
         case 'a-z':
-          komik.sort((a, b) => a.title.compareTo(b.title));
+          displayedManga.sort((a, b) => a.title.compareTo(b.title));
           break;
         case 'z-a':
-          komik.sort((a, b) => b.title.compareTo(a.title));
+          displayedManga.sort((a, b) => b.title.compareTo(a.title));
           break;
         case 'ongoing':
-          komik.sort((a, b) {
-            if (a.status == 'Ongoing' && b.status != 'Ongoing') return -1;
-            if (a.status != 'Ongoing' && b.status == 'Ongoing') return 1;
-            return 0;
-          });
+          displayedManga =
+              allManga.where((manga) => manga.status == 'Ongoing').toList();
           break;
         case 'completed':
-          komik.sort((a, b) {
-            if (a.status == 'Completed' && b.status != 'Completed') return -1;
-            if (a.status != 'Completed' && b.status == 'Completed') return 1;
-            return 0;
-          });
+          displayedManga =
+              allManga.where((manga) => manga.status == 'Completed').toList();
           break;
+        default:
+          // Show all if no valid option
+          displayedManga = List.from(allManga);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(genre);
-    print(genreFilters);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -247,7 +247,7 @@ class _BerandaState extends State<Beranda> {
                               child: Text('Completed'),
                             ),
                           ],
-                          onChanged: _sortManga,
+                          onChanged: _filterAndSortManga,
                         ),
                       ],
                     ),
@@ -324,7 +324,9 @@ class _BerandaState extends State<Beranda> {
               ),
             ),
           ),
-          AnimeGrid(komik: komik),
+          AnimeGrid(
+            komik: displayedManga,
+          ), // Gunakan displayedManga bukan allManga
         ],
       ),
     );
