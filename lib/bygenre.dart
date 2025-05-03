@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:project_manga/anime_grid.dart';
 import 'package:project_manga/models/listKomik.dart';
 import 'bytitle.dart';
@@ -30,8 +31,8 @@ class _BygenreState extends State<Bygenre> {
     final cari =
         komik.where((manga) {
           final komiktitle = manga.title.toLowerCase();
-          final input_title = titlek.toLowerCase();
-          return komiktitle.contains(input_title);
+          final inputtitle = titlek.toLowerCase();
+          return komiktitle.contains(inputtitle);
         }).toList();
 
     setState(() {

@@ -37,9 +37,9 @@ class _BerandaState extends State<Beranda> {
     final cari =
         allManga.where((manga) {
           final komiktitle = manga.title.toLowerCase();
-          final input_title = title.toLowerCase();
+          final inputtitle = title.toLowerCase();
 
-          return komiktitle.contains(input_title);
+          return komiktitle.contains(inputtitle);
         }).toList();
     Navigator.push(
       context,
@@ -67,8 +67,6 @@ class _BerandaState extends State<Beranda> {
 
     setState(() {
       _selectedSortOption = value;
-
-      // Reset to all manga first
       displayedManga = List.from(allManga);
 
       switch (value) {
@@ -193,7 +191,7 @@ class _BerandaState extends State<Beranda> {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -326,7 +324,7 @@ class _BerandaState extends State<Beranda> {
           ),
           AnimeGrid(
             komik: displayedManga,
-          ), // Gunakan displayedManga bukan allManga
+          ),
         ],
       ),
     );
