@@ -35,10 +35,8 @@ class AnimeGrid extends StatelessWidget {
     final childAspectRatio = screenWidth > 600 ? 0.65 : 0.75;
 
     return SliverPadding(
-      // Ganti Padding biasa dengan SliverPadding
       padding: const EdgeInsets.all(12.0),
       sliver: SliverGrid(
-        // Ganti GridView.builder dengan SliverGrid
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           crossAxisSpacing: 12,
